@@ -1,0 +1,578 @@
+   0  $accept : %entry% $end
+
+   1  toplevel : EOF
+   2           | Command SEMI toplevel
+
+   3  Command : Term
+
+   4  Term : AppTerm
+   5       | IF Term THEN Term ELSE Term
+   6       | SWITCH Term CASE Zero COLON Term CASE SUCC Zero COLON Term
+
+   7  Zero : INTV
+
+   8  AppTerm : ATerm
+   9          | SUCC ATerm
+  10          | PRED ATerm
+  11          | ISZERO ATerm
+
+  12  ATerm : LPAREN Term RPAREN
+  13        | TRUE
+  14        | FALSE
+  15        | INTV
+  16        | AND ATerm ATerm
+  17        | OR ATerm ATerm
+  18        | LPAREN Term RPAREN
+  19        | TRUE
+  20        | FALSE
+
+  21  %entry% : '\001' toplevel
+
+state 0
+	$accept : . %entry% $end  (0)
+
+	'\001'  shift 1
+	.  error
+
+	%entry%  goto 2
+
+
+state 1
+	%entry% : '\001' . toplevel  (21)
+
+	IF  shift 3
+	TRUE  shift 4
+	FALSE  shift 5
+	SUCC  shift 6
+	PRED  shift 7
+	ISZERO  shift 8
+	INTV  shift 9
+	SWITCH  shift 10
+	AND  shift 11
+	OR  shift 12
+	EOF  shift 13
+	LPAREN  shift 14
+	.  error
+
+	toplevel  goto 15
+	Command  goto 16
+	Term  goto 17
+	AppTerm  goto 18
+	ATerm  goto 19
+
+
+state 2
+	$accept : %entry% . $end  (0)
+
+	$end  accept
+
+
+state 3
+	Term : IF . Term THEN Term ELSE Term  (5)
+
+	IF  shift 3
+	TRUE  shift 4
+	FALSE  shift 5
+	SUCC  shift 6
+	PRED  shift 7
+	ISZERO  shift 8
+	INTV  shift 9
+	SWITCH  shift 10
+	AND  shift 11
+	OR  shift 12
+	LPAREN  shift 14
+	.  error
+
+	Term  goto 20
+	AppTerm  goto 18
+	ATerm  goto 19
+
+
+4: reduce/reduce conflict (reduce 13, reduce 19) on THEN
+4: reduce/reduce conflict (reduce 13, reduce 19) on ELSE
+4: reduce/reduce conflict (reduce 13, reduce 19) on TRUE
+4: reduce/reduce conflict (reduce 13, reduce 19) on FALSE
+4: reduce/reduce conflict (reduce 13, reduce 19) on INTV
+4: reduce/reduce conflict (reduce 13, reduce 19) on CASE
+4: reduce/reduce conflict (reduce 13, reduce 19) on AND
+4: reduce/reduce conflict (reduce 13, reduce 19) on OR
+4: reduce/reduce conflict (reduce 13, reduce 19) on LPAREN
+4: reduce/reduce conflict (reduce 13, reduce 19) on RPAREN
+4: reduce/reduce conflict (reduce 13, reduce 19) on SEMI
+state 4
+	ATerm : TRUE .  (13)
+	ATerm : TRUE .  (19)
+
+	.  reduce 13
+
+
+5: reduce/reduce conflict (reduce 14, reduce 20) on THEN
+5: reduce/reduce conflict (reduce 14, reduce 20) on ELSE
+5: reduce/reduce conflict (reduce 14, reduce 20) on TRUE
+5: reduce/reduce conflict (reduce 14, reduce 20) on FALSE
+5: reduce/reduce conflict (reduce 14, reduce 20) on INTV
+5: reduce/reduce conflict (reduce 14, reduce 20) on CASE
+5: reduce/reduce conflict (reduce 14, reduce 20) on AND
+5: reduce/reduce conflict (reduce 14, reduce 20) on OR
+5: reduce/reduce conflict (reduce 14, reduce 20) on LPAREN
+5: reduce/reduce conflict (reduce 14, reduce 20) on RPAREN
+5: reduce/reduce conflict (reduce 14, reduce 20) on SEMI
+state 5
+	ATerm : FALSE .  (14)
+	ATerm : FALSE .  (20)
+
+	.  reduce 14
+
+
+state 6
+	AppTerm : SUCC . ATerm  (9)
+
+	TRUE  shift 4
+	FALSE  shift 5
+	INTV  shift 9
+	AND  shift 11
+	OR  shift 12
+	LPAREN  shift 14
+	.  error
+
+	ATerm  goto 21
+
+
+state 7
+	AppTerm : PRED . ATerm  (10)
+
+	TRUE  shift 4
+	FALSE  shift 5
+	INTV  shift 9
+	AND  shift 11
+	OR  shift 12
+	LPAREN  shift 14
+	.  error
+
+	ATerm  goto 22
+
+
+state 8
+	AppTerm : ISZERO . ATerm  (11)
+
+	TRUE  shift 4
+	FALSE  shift 5
+	INTV  shift 9
+	AND  shift 11
+	OR  shift 12
+	LPAREN  shift 14
+	.  error
+
+	ATerm  goto 23
+
+
+state 9
+	ATerm : INTV .  (15)
+
+	.  reduce 15
+
+
+state 10
+	Term : SWITCH . Term CASE Zero COLON Term CASE SUCC Zero COLON Term  (6)
+
+	IF  shift 3
+	TRUE  shift 4
+	FALSE  shift 5
+	SUCC  shift 6
+	PRED  shift 7
+	ISZERO  shift 8
+	INTV  shift 9
+	SWITCH  shift 10
+	AND  shift 11
+	OR  shift 12
+	LPAREN  shift 14
+	.  error
+
+	Term  goto 24
+	AppTerm  goto 18
+	ATerm  goto 19
+
+
+state 11
+	ATerm : AND . ATerm ATerm  (16)
+
+	TRUE  shift 4
+	FALSE  shift 5
+	INTV  shift 9
+	AND  shift 11
+	OR  shift 12
+	LPAREN  shift 14
+	.  error
+
+	ATerm  goto 25
+
+
+state 12
+	ATerm : OR . ATerm ATerm  (17)
+
+	TRUE  shift 4
+	FALSE  shift 5
+	INTV  shift 9
+	AND  shift 11
+	OR  shift 12
+	LPAREN  shift 14
+	.  error
+
+	ATerm  goto 26
+
+
+state 13
+	toplevel : EOF .  (1)
+
+	.  reduce 1
+
+
+state 14
+	ATerm : LPAREN . Term RPAREN  (12)
+	ATerm : LPAREN . Term RPAREN  (18)
+
+	IF  shift 3
+	TRUE  shift 4
+	FALSE  shift 5
+	SUCC  shift 6
+	PRED  shift 7
+	ISZERO  shift 8
+	INTV  shift 9
+	SWITCH  shift 10
+	AND  shift 11
+	OR  shift 12
+	LPAREN  shift 14
+	.  error
+
+	Term  goto 27
+	AppTerm  goto 18
+	ATerm  goto 19
+
+
+state 15
+	%entry% : '\001' toplevel .  (21)
+
+	.  reduce 21
+
+
+state 16
+	toplevel : Command . SEMI toplevel  (2)
+
+	SEMI  shift 28
+	.  error
+
+
+state 17
+	Command : Term .  (3)
+
+	.  reduce 3
+
+
+state 18
+	Term : AppTerm .  (4)
+
+	.  reduce 4
+
+
+state 19
+	AppTerm : ATerm .  (8)
+
+	.  reduce 8
+
+
+state 20
+	Term : IF Term . THEN Term ELSE Term  (5)
+
+	THEN  shift 29
+	.  error
+
+
+state 21
+	AppTerm : SUCC ATerm .  (9)
+
+	.  reduce 9
+
+
+state 22
+	AppTerm : PRED ATerm .  (10)
+
+	.  reduce 10
+
+
+state 23
+	AppTerm : ISZERO ATerm .  (11)
+
+	.  reduce 11
+
+
+state 24
+	Term : SWITCH Term . CASE Zero COLON Term CASE SUCC Zero COLON Term  (6)
+
+	CASE  shift 30
+	.  error
+
+
+state 25
+	ATerm : AND ATerm . ATerm  (16)
+
+	TRUE  shift 4
+	FALSE  shift 5
+	INTV  shift 9
+	AND  shift 11
+	OR  shift 12
+	LPAREN  shift 14
+	.  error
+
+	ATerm  goto 31
+
+
+state 26
+	ATerm : OR ATerm . ATerm  (17)
+
+	TRUE  shift 4
+	FALSE  shift 5
+	INTV  shift 9
+	AND  shift 11
+	OR  shift 12
+	LPAREN  shift 14
+	.  error
+
+	ATerm  goto 32
+
+
+state 27
+	ATerm : LPAREN Term . RPAREN  (12)
+	ATerm : LPAREN Term . RPAREN  (18)
+
+	RPAREN  shift 33
+	.  error
+
+
+state 28
+	toplevel : Command SEMI . toplevel  (2)
+
+	IF  shift 3
+	TRUE  shift 4
+	FALSE  shift 5
+	SUCC  shift 6
+	PRED  shift 7
+	ISZERO  shift 8
+	INTV  shift 9
+	SWITCH  shift 10
+	AND  shift 11
+	OR  shift 12
+	EOF  shift 13
+	LPAREN  shift 14
+	.  error
+
+	toplevel  goto 34
+	Command  goto 16
+	Term  goto 17
+	AppTerm  goto 18
+	ATerm  goto 19
+
+
+state 29
+	Term : IF Term THEN . Term ELSE Term  (5)
+
+	IF  shift 3
+	TRUE  shift 4
+	FALSE  shift 5
+	SUCC  shift 6
+	PRED  shift 7
+	ISZERO  shift 8
+	INTV  shift 9
+	SWITCH  shift 10
+	AND  shift 11
+	OR  shift 12
+	LPAREN  shift 14
+	.  error
+
+	Term  goto 35
+	AppTerm  goto 18
+	ATerm  goto 19
+
+
+state 30
+	Term : SWITCH Term CASE . Zero COLON Term CASE SUCC Zero COLON Term  (6)
+
+	INTV  shift 36
+	.  error
+
+	Zero  goto 37
+
+
+state 31
+	ATerm : AND ATerm ATerm .  (16)
+
+	.  reduce 16
+
+
+state 32
+	ATerm : OR ATerm ATerm .  (17)
+
+	.  reduce 17
+
+
+33: reduce/reduce conflict (reduce 12, reduce 18) on THEN
+33: reduce/reduce conflict (reduce 12, reduce 18) on ELSE
+33: reduce/reduce conflict (reduce 12, reduce 18) on TRUE
+33: reduce/reduce conflict (reduce 12, reduce 18) on FALSE
+33: reduce/reduce conflict (reduce 12, reduce 18) on INTV
+33: reduce/reduce conflict (reduce 12, reduce 18) on CASE
+33: reduce/reduce conflict (reduce 12, reduce 18) on AND
+33: reduce/reduce conflict (reduce 12, reduce 18) on OR
+33: reduce/reduce conflict (reduce 12, reduce 18) on LPAREN
+33: reduce/reduce conflict (reduce 12, reduce 18) on RPAREN
+33: reduce/reduce conflict (reduce 12, reduce 18) on SEMI
+state 33
+	ATerm : LPAREN Term RPAREN .  (12)
+	ATerm : LPAREN Term RPAREN .  (18)
+
+	.  reduce 12
+
+
+state 34
+	toplevel : Command SEMI toplevel .  (2)
+
+	.  reduce 2
+
+
+state 35
+	Term : IF Term THEN Term . ELSE Term  (5)
+
+	ELSE  shift 38
+	.  error
+
+
+state 36
+	Zero : INTV .  (7)
+
+	.  reduce 7
+
+
+state 37
+	Term : SWITCH Term CASE Zero . COLON Term CASE SUCC Zero COLON Term  (6)
+
+	COLON  shift 39
+	.  error
+
+
+state 38
+	Term : IF Term THEN Term ELSE . Term  (5)
+
+	IF  shift 3
+	TRUE  shift 4
+	FALSE  shift 5
+	SUCC  shift 6
+	PRED  shift 7
+	ISZERO  shift 8
+	INTV  shift 9
+	SWITCH  shift 10
+	AND  shift 11
+	OR  shift 12
+	LPAREN  shift 14
+	.  error
+
+	Term  goto 40
+	AppTerm  goto 18
+	ATerm  goto 19
+
+
+state 39
+	Term : SWITCH Term CASE Zero COLON . Term CASE SUCC Zero COLON Term  (6)
+
+	IF  shift 3
+	TRUE  shift 4
+	FALSE  shift 5
+	SUCC  shift 6
+	PRED  shift 7
+	ISZERO  shift 8
+	INTV  shift 9
+	SWITCH  shift 10
+	AND  shift 11
+	OR  shift 12
+	LPAREN  shift 14
+	.  error
+
+	Term  goto 41
+	AppTerm  goto 18
+	ATerm  goto 19
+
+
+state 40
+	Term : IF Term THEN Term ELSE Term .  (5)
+
+	.  reduce 5
+
+
+state 41
+	Term : SWITCH Term CASE Zero COLON Term . CASE SUCC Zero COLON Term  (6)
+
+	CASE  shift 42
+	.  error
+
+
+state 42
+	Term : SWITCH Term CASE Zero COLON Term CASE . SUCC Zero COLON Term  (6)
+
+	SUCC  shift 43
+	.  error
+
+
+state 43
+	Term : SWITCH Term CASE Zero COLON Term CASE SUCC . Zero COLON Term  (6)
+
+	INTV  shift 36
+	.  error
+
+	Zero  goto 44
+
+
+state 44
+	Term : SWITCH Term CASE Zero COLON Term CASE SUCC Zero . COLON Term  (6)
+
+	COLON  shift 45
+	.  error
+
+
+state 45
+	Term : SWITCH Term CASE Zero COLON Term CASE SUCC Zero COLON . Term  (6)
+
+	IF  shift 3
+	TRUE  shift 4
+	FALSE  shift 5
+	SUCC  shift 6
+	PRED  shift 7
+	ISZERO  shift 8
+	INTV  shift 9
+	SWITCH  shift 10
+	AND  shift 11
+	OR  shift 12
+	LPAREN  shift 14
+	.  error
+
+	Term  goto 46
+	AppTerm  goto 18
+	ATerm  goto 19
+
+
+state 46
+	Term : SWITCH Term CASE Zero COLON Term CASE SUCC Zero COLON Term .  (6)
+
+	.  reduce 6
+
+
+Rules never reduced:
+	ATerm : LPAREN Term RPAREN  (18)
+	ATerm : TRUE  (19)
+	ATerm : FALSE  (20)
+
+
+State 4 contains 11 reduce/reduce conflicts.
+State 5 contains 11 reduce/reduce conflicts.
+State 33 contains 11 reduce/reduce conflicts.
+
+
+57 terminals, 8 nonterminals
+22 grammar rules, 47 states
